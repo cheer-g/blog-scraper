@@ -1,13 +1,35 @@
+# -*- coding: utf-8 -*-
 import scrapy
 
-class SidScraper(scrapy.Spider):
-    name    =   "sidspider"
-    start_urls  =   ['https://sidyzworld.wordpress.com/category/malayalam-movie-views/']
-
+class BlogScraper(scrapy.Spider):
+    #Postlinks()
+    name    =   "blogcrawl"
+    start_urls  =   []
+    f=open("links.txt","r+")
+    for links in f:
+        start_urls.append(links)
+    
     def parse(self,response):
-        SET_SELECTOR    =   '.post post-4886 type-post status-publish format-standard hentry category-malayalam-movie-views has-post-thumbnail fallback-thumbnail'
-        for review in response.css(SET_SELECTOR):
-            NAME_SELECTOR   =   'h2::text'
-            yield{
-                'name': review.css(NAME_SELECTOR).extract_first(),
-            }
+        f1=open("reviews.txt","a+",encoding="utf-8")
+        reviews =   response.css('div.post-content p::text').extract()
+        for cont in reviews:
+            yield{'review':cont}
+            f1.write(cont+"\n")
+
+
+# class Postlinks(scrapy.Spider):
+#     name    =   "linkextract"
+#     start_urls  =   []
+#     f=open("haha.txt","r+")
+#     for link in f:
+#         start_urls.append(link)
+    
+#     def parse(self,response):
+#         f1=open("links.txt","a+")
+#         links   =   response.css('.post-title a::attr(href)').extract()
+#         for link in links:
+#             yield{'postlink':link}
+#             f1.write(link+"\n")
+#         f1.close()
+#     f.close()
+#     start_urls=[]
