@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import sys
+sys.path.append('.')
+from items import ReviewItems
 
 class BlogScraper(scrapy.Spider):
     #Postlinks()
@@ -10,11 +13,13 @@ class BlogScraper(scrapy.Spider):
         start_urls.append(links)
     
     def parse(self,response):
+        item    =   ReviewItems()
         f1=open("reviews.txt","a+",encoding="utf-8")
         reviews =   response.css('div.post-content p::text').extract()
         for cont in reviews:
-            yield{'review':cont}
-            f1.write(cont+"\n")
+            item['review']  =   cont
+            yield item
+            f1.write(cont+"\n\n")
 
 
 # class Postlinks(scrapy.Spider):
